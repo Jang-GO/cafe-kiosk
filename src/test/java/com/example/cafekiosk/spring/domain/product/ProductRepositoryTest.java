@@ -99,4 +99,49 @@ class ProductRepositoryTest {
 
                 );
     }
+
+    @DisplayName("가장 마지막으로 저장된 상품의 상품번호를 가져온다.")
+    @Test
+    void findLatestProductNumber() {
+        // given
+        String targetProductNumber = "003";
+
+
+        Product product1 = Product.builder()
+                .productNumber("001")
+                .type(HANDMADE)
+                .sellingType(SELLING)
+                .name("아메리카노")
+                .price(4000).build();
+        Product product2 = Product.builder()
+                .productNumber("002")
+                .type(HANDMADE)
+                .sellingType(HOLD)
+                .name("카페라떼")
+                .price(4500).build();
+        Product product3 = Product.builder()
+                .productNumber(targetProductNumber)
+                .type(HANDMADE)
+                .sellingType(STOP_SELLING)
+                .name("팥빙수")
+                .price(7000).build();
+
+        productRepository.save(product1);
+        productRepository.save(product2);
+        productRepository.save(product3);
+        // when
+        String productNumber = productRepository.findLatestProductNumber();
+        // then
+
+        assertThat(productNumber).isEqualTo("003");
+    }
+
+    @DisplayName("가장 마지막으로 저장된 상품의 상품번호를 가져올 때, 상품이 하나도 없는 경우에는 null을 반환한다.")
+    @Test
+    void findLatestProductNumberWhenProductsIsEmpty() {
+        // when
+        String productNumber = productRepository.findLatestProductNumber();
+        // then
+        assertThat(productNumber).isNull();
+    }
 }

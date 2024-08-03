@@ -5,6 +5,7 @@ import com.example.cafekiosk.spring.domain.orderproduct.OrderProduct;
 import com.example.cafekiosk.spring.domain.product.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,15 +35,20 @@ public class Order extends BaseEntity {
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
 
-    public Order(List<Product> orderProducts, LocalDateTime registeredDateTime) {
-        this.orderStatus = OrderStatus.INIT;
+    public static Order create(List<Product> products, LocalDateTime registeredDateTime) {
+        return Order.builder()
+                .orderStatus(OrderStatus.INIT)
+                .orderProducts(products)
+                .registeredDateTime(registeredDateTime)
+                .build();
+    }
+
+    @Builder
+    public Order(List<Product> orderProducts,OrderStatus orderStatus, LocalDateTime registeredDateTime) {
+        this.orderStatus = orderStatus;
         this.totalPrice = orderProducts.stream().mapToInt(Product::getPrice).sum();
         this.registeredDateTime = registeredDateTime;
         this.orderProducts = orderProducts.stream().map(product -> new OrderProduct(this, product))
                 .collect(Collectors.toList());
-    }
-
-    public static Order create(List<Product> products, LocalDateTime registeredDateTime) {
-        return new Order(products, registeredDateTime);
     }
 }

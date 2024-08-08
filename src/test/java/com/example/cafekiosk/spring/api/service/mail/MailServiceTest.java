@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -35,10 +36,14 @@ class MailServiceTest {
     @Test
     void sendMail() {
         // given
+//        Mockito.when(mailSendClient.sendEmail(anyString(),anyString(),anyString(),anyString()))
+//                .thenReturn(true);
+
+        BDDMockito.given(mailSendClient.sendEmail(anyString(),anyString(),anyString(),anyString()))
+                .willReturn(true);
+
 //        MailSendClient mailSendClient = Mockito.mock(MailSendClient.class);
 //        MailSendHistoryRepository mailSendHistoryRepository = Mockito.mock(MailSendHistoryRepository.class);
-        when(mailSendClient.sendEmail(anyString(),anyString(),anyString(),anyString()))
-                .thenReturn(true);
 //        when(mailSendHistoryRepository.save(any(MailSendHistory.class)))
 //                .thenReturn();
 
